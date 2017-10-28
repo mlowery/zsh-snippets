@@ -19,6 +19,9 @@ snippet-expand() {
 
     LBUFFER=${LBUFFER%%(#m)[.\-+:|_a-zA-Z0-9]#}
     LBUFFER+=${snippets[$MATCH]:-$MATCH}
+    # mlowery begin
+    zle self-insert
+    # mlowery end
 }
 zle -N snippet-expand
 
@@ -39,37 +42,18 @@ run-help-list-snippets(){
 zle -N run-help-list-snippets
 
 
-# set up some default snippets
-snippet-add l      "less "
-snippet-add tl     "| less "
-snippet-add g      "grep "
-snippet-add tg     "| grep "
-snippet-add gl     "grep -l"
-snippet-add tgl    "| grep -l"
-snippet-add gL     "grep -L"
-snippet-add tgL    "| grep -L"
-snippet-add gv     "grep -v "
-snippet-add tgv    "| grep -v "
-snippet-add eg     "egrep "
-snippet-add teg    "| egrep "
-snippet-add fg     "fgrep "
-snippet-add tfg    "| fgrep "
-snippet-add fgv    "fgrep -v "
-snippet-add tfgv   "| fgrep -v "
-snippet-add ag     "agrep "
-snippet-add tag    "| agrep "
-snippet-add ta     "| ag "
-snippet-add p      "${PAGER:-less} "
-snippet-add tp     "| ${PAGER:-less} "
-snippet-add h      "head "
-snippet-add th     "| head "
-snippet-add t      "tail "
-snippet-add tt     "| tail "
-snippet-add s      "sort "
-snippet-add ts     "| sort "
-snippet-add v      "${VISUAL:-${EDITOR:-nano}} "
-snippet-add tv     "| ${VISUAL:-${EDITOR:-nano}} "
-snippet-add tc     "| cut "
-snippet-add tu     "| uniq "
-snippet-add tx     "| xargs "
+# mlowery begin
 
+# disable default snippets
+# set up key bindings like http://zshwiki.org/home/examples/zleiab
+
+snippet-noexpand() {
+  LBUFFER+=' '
+}
+zle -N snippet-noexpand
+
+bindkey " " snippet-expand
+bindkey "^x " snippet-noexpand
+bindkey -M isearch " " self-insert
+
+# mlowery end
